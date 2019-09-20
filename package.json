@@ -1,0 +1,22 @@
+{
+  "name": "opentablesoccer",
+  "version": "1.0.0",
+  "description": "Open Source Table Soccer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rokie95/OpenTableSoccer.git"
+  },
+  "keywords": [
+    "OpenSource"
+  ],
+  "author": "rokie95",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rokie95/OpenTableSoccer/issues"
+  },
+  "homepage": "https://github.com/rokie95/OpenTableSoccer#readme"
+}
