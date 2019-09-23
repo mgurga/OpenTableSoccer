@@ -1,39 +1,56 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <title>OpenTableSoccer</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
+<head>
+    <meta charset="utf-8">
+    <title>OpenTableSoccer</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+</head>
 
-    <body>
-        <div id="canvasDiv">
-            <!-- <canvas width=1080 height=1920 id="soccerCanvas"></canvas> -->
-        </div>
+<body>
+    <div id="writeup">
+        <h1>Open Table Soccer</h1>
+        <p>by <a href="https://github.com/rokie95/">rokie95</a></p>
+    </div>
 
-        <script src="js/matter.js"></script>
-        <script src="js/socket.io.js"></script>
-        <script src="js/decomp.js"></script>
-        <script src="js/OpenTableSoccer.js"></script>
-    </body>
+    <div id="canvasDiv">
+        <!-- <canvas width=1080 height=1920 id="soccerCanvas"></canvas> -->
+    </div>
 
-    <style>
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            overflow: hidden;
-            background-image: url('assets/background.gif');
-        }
+    <script src="js/matter.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/decomp.js"></script>
+    <script src="js/OpenTableSoccer.js"></script>
+</body>
 
-        canvas {
-            width: auto;
-            height: 100vh;
-        }
-    </style>
+<style>
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-image: url('assets/background.gif');
+    }
+
+    canvas {
+        width: auto;
+        height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+
+    #writeup {
+        float: right;
+        color: white;
+        font-family: monospace;
+    }
+
+    p {
+        font-size: 15pt;
+    }
+</style>
 
 </html>
