@@ -109,16 +109,8 @@ Matter.Engine.run(engine);
 Matter.Render.run(render);
 
 Matter.Events.on(engine, "collisionEnd", function(evt) {
-    var objs = evt.source.broadphase.pairs.A6B14;
-
-    console.log("Collision between: \"" + objs[0].label + "\" and \"" + objs[1].label + "\"");
-
-    if((objs[0].label == "homePlayer" || objs[0].label == "homeGoalie") && objs[1].label == "ball") {
-        console.log("hit ball");
-    }
-    if((objs[1].label == "homePlayer" || objs[1].label == "homeGoalie") && objs[0].label == "ball") {
-        console.log("hit ball");
-    }
+    //console.log(evt);
+    //console.log(Matter.Detector.collisions(evt.source.broadphase, engine));
 });
 
 Matter.Events.on(render, 'afterRender', function(evt) {
@@ -142,20 +134,45 @@ Matter.Events.on(render, 'afterRender', function(evt) {
         //console.log("dragging");
     }
 
+    if(Matter.Query.collides(ball, homePlayers).length != 0) {
+        var objs = Matter.Query.collides(ball, homePlayers)[0];
+        if(objs.bodyA.label == "ball") {
+            hasTouchedBall = objs.bodyB.id;
+        } else {
+            hasTouchedBall = objs.bodyA.id;
+        }
+
+        var hitter = undefined;
+        var hitterBody = undefined;
+        if(objs.bodyA.label == "ball") {
+            hitter = objs.bodyB.id;
+            hitterBody = objs.bodyB;
+        } else {
+            hitter = objs.bodyA.id;
+            hitterBody = objs.bodyA;
+        }
+
+        console.log("hasTouchedBall = " + hitterBody.label);
+
+        if(hitter.id != hasTouchedBall) {
+            var passConstraint = Matter.Constraint.create({
+                bodyA: hitterBody,
+                bodyB: ball,
+                damping: 0.1,
+                length: 60
+            });
+            Matter.World.add(engine.world, [passConstraint]);
+        }
+
+    }
+
     // for(var i = 0; i < homePlayerCollisions.length; i++) {
     //     if(homePlayerCollisions[i].collides) {
     //         hasTouchedBall = i;
     //         console.log("player touched ball");
     //     }
     //     if(hasTouchedBall != i && homePlayerCollisions[i].collides) {
-    //         var passConstraint = Matter.Constraint.create({
-    //             bodyA: homePlayer[i],
-    //             bodyB: ball,
-    //             damping: 0.1,
-    //             length: 40
-    //         });
-
-    //         Matter.World.add(engine.world, [passConstraint]);
+    //         
     //     }
     // }
 });
