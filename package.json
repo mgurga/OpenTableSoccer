@@ -14,9 +14,12 @@
     "OpenSource"
   ],
   "author": "rokie95",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/rokie95/OpenTableSoccer/issues"
   },
-  "homepage": "https://github.com/rokie95/OpenTableSoccer#readme"
+  "homepage": "https://github.com/rokie95/OpenTableSoccer#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
