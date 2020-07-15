@@ -17,6 +17,20 @@ var render = Matter.Render.create({
 var dragging = false;
 var draggingBody;
 var ctx = render.context;
+var ce = React.createElement;
+const socket = io(this.window);
+
+function searchforgame() {
+	socket.emit("searchforgame", () => {
+		socket.on("ready", () => {
+			if(prompt("are you ready?")) {
+				socket.emit("ready");
+			} else {
+				socket.emit("notready");
+			}
+		});
+	});
+}
 
 engine.world.gravity.y = 0;
 
@@ -130,7 +144,7 @@ Matter.Events.on(render, 'afterRender', function(evt) {
 
         ctx.beginPath();
         ctx.moveTo(draggingBody.position.x, draggingBody.position.y);
-        ctx.lineTo(draggingBody.position.x - mousediffx*2, draggingBody.position.y - mousediffy*2);
+        ctx.lineTo(draggingBody.position.x - mousediffx, draggingBody.position.y - mousediffy);
         ctx.stroke();
 
         console.log("dragging");

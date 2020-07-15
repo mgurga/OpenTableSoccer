@@ -1,18 +1,20 @@
-const express = require('express');
-const PORT = process.env.PORT || 5000;
+const express = require("express");
+const PORT = process.env.PORT || 9000;
 const app = express();
+const server = require("http").createServer(app);
+const io = require("socket.io").listen(server);
 
-app.get("/", function(req, res) {
-    var options = {
-        root: __dirname + "/public/",
-        dotfiles: 'deny',
-        headers: {
-          'x-timestamp': Date.now(),
-          'x-sent': true
-        }    
-    };
+// host the static express website
+const ExpressHoster = require("./ExpressHoster");
+let hoster = new ExpressHoster(app);
+hoster.start();
 
-    res.sendFile("index.html", options);
-});
-app.use(express.static('public'))
-app.listen(PORT);
+// start socket server
+const SocketHandler = require("./SocketHandler");
+let socket = new SocketHandler(io); 
+socket.start();
+setInterval(() => {
+	socket.update();
+}, 100)
+
+server.listen(PORT);
