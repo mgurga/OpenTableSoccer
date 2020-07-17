@@ -4,6 +4,8 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io").listen(server);
 
+console.log("hosting on ::" + PORT);
+
 // host the static express website
 const ExpressHoster = require("./ExpressHoster");
 let hoster = new ExpressHoster(app);

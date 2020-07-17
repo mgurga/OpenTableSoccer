@@ -21,14 +21,22 @@ var ce = React.createElement;
 const socket = io(this.window);
 
 function searchforgame() {
-	socket.emit("searchforgame", () => {
-		socket.on("ready", () => {
-			if(prompt("are you ready?")) {
-				socket.emit("ready");
-			} else {
-				socket.emit("notready");
-			}
-		});
+	socket.emit("searchforgame");
+	socket.on("ready", () => {
+		if(confirm("are you ready?")) {
+			socket.emit("ready");
+			socket.on("lockedin", () => {
+				alert("locked in!");
+			});
+		} else {
+			socket.emit("notready");
+			socket.on("leftsearching", () => {
+				alert("left search");
+			});	
+		}
+	});
+	socket.on("cancelled", (resp) => {
+		alert("game cancelled, " + resp.reason);
 	});
 }
 
