@@ -28,8 +28,8 @@ class SocketHandler {
 		var socketids = [];
 		if(!(searchroom == undefined)) {
 			socketids = Object.keys(searchroom.sockets);
-			console.log("ids in searchroom:");
-			console.log(socketids);
+			//console.log("ids in searchroom:");
+			//console.log(socketids);
 		}
 
 		// check the search room if 2 or more people are in it
@@ -38,39 +38,39 @@ class SocketHandler {
 			socketids = Object.keys(searchroom.sockets);
 			
 			// readys the users from the game
-			// this.usersready(socketids[0], socketids[1]);
+			this.usersready(socketids[0], socketids[1]);
 
 			// remove sockets from searching room
-			delete this.io.sockets.adapter.rooms['searching'].sockets[socketids[0]];
-			delete this.io.sockets.adapter.rooms['searching'].sockets[socketids[1]];
+			this.removefromroom(socketids[0], "searching");
+			this.removefromroom(socketids[1], "searching");
 		}
 	}
 	
 	usersready(socket1id, socket2id) {
 		var usersready = [false, false];
-		//console.log(socketids);
 
 		// attach ready and notready to first user
-		this.io.to(firstuser).emit("ready");
-		this.io.to(firstuser).on("ready", (socket) => {
-			usersockets[0] = socket;
+		this.io.to(socket1id).emit("usersreadyup");
+		this.io.to(socket1id).on("ready", (socket) => {
 			usersready[0] = true;
+			console.log("user 1 is ready");
 			socket.emit("lockedin");
 		});
-		this.io.to(firstuser).on("notready", (socket) => {
-			socket.leave("searching");
+		this.io.to(socket1id).on("notready", (socket) => {
+			// user responded not ready
+			console.log("user 1 is NOT ready");
 		});
 
 		// attach ready and notready to second user
-		this.io.to(seconduser).emit("ready");
-		this.io.to(seconduser).on("ready", (socket) => {
-			usersockets[1] = socket;
+		this.io.to(socket2id).emit("usersreadyup");
+		this.io.to(socket2id).on("ready", (socket) => {
 			usersready[1] = true;
+			console.log("user 2 is ready");
 			socket.emit("lockedin");
 		});
-		this.io.to(seconduser).on("notready", (socket) => {
-			socket.leave("searching");
-			socket.emit("leftsearching");
+		this.io.to(socket2id).on("notready", (socket) => {
+			// user responded not ready
+			console.log("user 2 is NOT ready");
 		});
 
 		var failedReadys = 0;
@@ -78,17 +78,15 @@ class SocketHandler {
 		var checkUserReady = setInterval(() => {
 			if(usersready[0] == true && usersready[1] == true) {
 				clearInterval(checkUserReady);
+				console.log("starting game");
 				this.startgame(firstuser, seconduser);
 			}
 			if(failedReadys >= 100) {
 				clearInterval(checkUserReady);
-				this.io.to(firstuser).emit("cancelled", {"reason":"other player failed to ready up"});
-				this.activeUsers[firstuser].leave("searching");
-				this.io.to(seconduser).emit("cancelled", {"reason":"other player failed to ready up"});
-				this.activeUsers[seconduser].leave("searching");
-				console.log("removing 2 people from searching room");
-				console.log("current searching room:");
-				console.log(socketids);
+				this.io.to(socket1id).emit("cancelled", {"reason":"other player failed to ready up"});
+				this.io.to(socket2id).emit("cancelled", {"reason":"other player failed to ready up"});
+				console.log("users failed to ready");
+				console.log(socket1id + " and " + socket2id);
 			}
 			failedReadys++;
 		}, 100);
@@ -96,6 +94,10 @@ class SocketHandler {
 
 	startgame(socket1id, socket2id) {
 		console.log("starting game");
+	}
+
+	removefromroom(id, room) {
+		delete this.io.sockets.adapter.rooms[room].sockets[id];
 	}
 }
 

@@ -22,17 +22,16 @@ const socket = io(this.window);
 
 function searchforgame() {
 	socket.emit("searchforgame");
-	socket.on("ready", () => {
-		if(confirm("are you ready?")) {
+	socket.on("usersreadyup", () => {
+		if(confirm("are you ready?") == true) {
+			console.log("sending ready");
 			socket.emit("ready");
 			socket.on("lockedin", () => {
 				alert("locked in!");
 			});
 		} else {
+			console.log("sending notready");
 			socket.emit("notready");
-			socket.on("leftsearching", () => {
-				alert("left search");
-			});	
 		}
 	});
 	socket.on("cancelled", (resp) => {
